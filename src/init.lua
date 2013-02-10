@@ -18,7 +18,9 @@ local logging = require('logging')
 local debugm = require('debug')
 local fmt = require('string').format
 
-local Entry = {}
+local MonitoringAgent = require('./monitoring_agent').MonitoringAgent
+local Setup = require('./setup').Setup
+local constants = require('./util/constants')
 
 local argv = require("options")
   .usage('Usage: ')
@@ -41,18 +43,46 @@ local argv = require("options")
   .alias({['K'] = 'apikey'})
   .argv("idonhU:K:e:x:p:c:s:n:k:u")
 
+local Entry = {}
+
 function Entry.run()
-  local mod = argv.args.e and argv.args.e or 'default'
-  mod = './modules/monitoring/' .. mod
 
   if argv.args.d then
     logging.set_level(logging.EVERYTHING)
   else
     logging.set_level(logging.INFO)
   end
-  logging.debugf('Running Module %s', mod)
 
-  require(mod).run(argv.args)
+  if argv.crash then
+    return virgo.force_crash()
+  end
+
+  local options = {}
+
+  if argv.s then
+    options.stateDirectory = argv.s
+  end
+
+  options.configFile = argv.c or constants.DEFAULT_CONFIG_PATH
+
+  if argv.p then
+    options.pidFile = argv.p
+  end
+
+  if argv.i then
+    options.tls = {
+      rejectUnauthorized = true,
+      ca = require('./certs').caCertsDebug
+    }
+  end
+
+  local agent = MonitoringAgent:new(options)
+
+  if not argv.u then
+    return agent:start(options)
+  end
+
+  Setup:new(argv, options.configFile, agent):run()
 end
 
 return Entry
