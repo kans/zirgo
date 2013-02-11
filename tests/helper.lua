@@ -3,7 +3,7 @@ local constants = require('constants')
 local misc = require('monitoring/default/util/misc')
 
 function runner(name)
-  return spawn('python', {'agents/monitoring/runner.py', name})
+  return spawn('python', {'tests/runner.py', name})
 end
 
 local child

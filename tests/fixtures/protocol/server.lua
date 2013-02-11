@@ -76,6 +76,7 @@ dhU2Sz3Q60DwJEL1VenQHiVYlWWtqXBThe9ggqRPnCfsCRTP8qifKkjk45zWPcpN
 ]]
 
 local send_request = function(log, client, fixture)
+  print('requiring', fixture)
   local request = fixtures[fixture]
   log("Sending request:" .. request)
   client:write(request .. '\n')
@@ -138,23 +139,23 @@ local http_responder = function(log, client, server)
 
     -- path on disk
     file_path = fmt("static_files%s", req.url)
-    -- split path on / 
+    -- split path on /
     parts = {}
     for part in file_path:gmatch("[^/]+") do
       parts[#parts + 1] = part
     end
-    -- join path on the / or \\ 
+    -- join path on the / or \\
     file_path = path.join(__dirname, unpack(parts))
 
     fs.readFile(file_path, function(err, data)
       local status = 200
-      if err then 
+      if err then
         log('got err:' .. tostring(err))
         data = err
         status = 500
       end
 
-      return _reply_http(status, data)    
+      return _reply_http(status, data)
     end)
   end)
 end
@@ -227,7 +228,7 @@ local json_responder = function(log, client, server)
   -- Disconnect the agent after some random number of seconds
   -- to exercise reconnect logic
   if opts.perform_client_disconnect == 'true' then
-    local disconnect_time = opts.destroy_connection_base + 
+    local disconnect_time = opts.destroy_connection_base +
       math.floor(math.random() * opts.destroy_connection_jitter)
     log("Destroying connection after " .. disconnect_time .. "ms connected")
     table.insert(timers, timer.setTimeout(disconnect_time, function()
@@ -238,7 +239,7 @@ local json_responder = function(log, client, server)
 end
 
 local on_tls_creation = function(port, server, client)
-  
+
   local log = function(...)
     print(port .. ": " .. ...)
   end
@@ -254,7 +255,7 @@ local on_tls_creation = function(port, server, client)
       responder = json_responder
     end
     responder(log, client, server)
-      -- the server hadn't set up listeners when we got the request, so we have to reemit it 
+      -- the server hadn't set up listeners when we got the request, so we have to reemit it
     client:emit('data', data)
   end)
 end

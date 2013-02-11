@@ -5,14 +5,12 @@ import subprocess
 import sys
 import signal
 
-root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.join(root, 'tools'))
-import paths
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def test_cmd(additional=""):
-    state_config = os.path.join(paths.root, 'contrib')
-    monitoring_config = os.path.join(paths.root, 'agents', 'monitoring', 'tests', 'fixtures', 'monitoring-agent-localhost.cfg')
+    state_config = os.path.join(ROOT, 'contrib')
+    monitoring_config = os.path.join(ROOT, 'fixtures', 'monitoring-agent-localhost.cfg')
     zip_file = "monitoring.zip"
     cmd = '%s -n -z %s -c %s -s %s %s' % (paths.agent, zip_file, monitoring_config, state_config, additional)
     print cmd
@@ -20,9 +18,7 @@ def test_cmd(additional=""):
 
 
 def test_server_fixture(stdout=None):
-    server = os.path.join('agents', 'monitoring', 'tests', 'fixtures', 'protocol', 'server.lua')
-
-    cmd = "%s %s" % (paths.luvit, server)
+    cmd = "luvit %s" % (os.path.join('tests', 'fixtures', 'protocol', 'server.lua'))
     print cmd
     rc = 0
     if stdout is None:
@@ -33,8 +29,8 @@ def test_server_fixture(stdout=None):
 
 
 def test_server_fixture_blocking(stdout=None):
-    server = os.path.join('agents', 'monitoring', 'tests', 'fixtures', 'protocol', 'server.lua')
-    proc = subprocess.Popen([paths.luvit, server])
+    server = os.path.join('tests', 'fixtures', 'protocol', 'server.lua')
+    proc = subprocess.Popen(["luvit", server])
 
     def handler(signum, frame):
         proc.kill()

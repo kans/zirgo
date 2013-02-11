@@ -289,7 +289,7 @@ end
 
 exports['test_custom_plugin_timeout'] = function(test, asserts)
   constants.DEFAULT_CUSTOM_PLUGINS_PATH = path.join(process.cwd(),
-                      '/agents/monitoring/tests/fixtures/custom_plugins')
+                      '/tests/fixtures/custom_plugins')
 
   local check = PluginCheck:new({id='foo', period=30,
                                 details={timeout=500, file='timeout.py'}})
@@ -309,7 +309,7 @@ exports['test_custom_plugin_file_not_executable'] = function(test, asserts)
   end
 
   constants.DEFAULT_CUSTOM_PLUGINS_PATH = path.join(process.cwd(),
-                      '/agents/monitoring/tests/fixtures/custom_plugins')
+                      '/tests/fixtures/custom_plugins')
 
   local check = PluginCheck:new({id='foo', period=30,
                                  details={file='not_executable.sh'}})
@@ -329,7 +329,7 @@ exports['test_custom_plugin_non_zero_exit_code_with_status'] = function(test, as
   end
 
   constants.DEFAULT_CUSTOM_PLUGINS_PATH = path.join(process.cwd(),
-                      '/agents/monitoring/tests/fixtures/custom_plugins')
+                      '/tests/fixtures/custom_plugins')
 
   local check = PluginCheck:new({id='foo', period=30,
                                  details={file='non_zero_with_status.sh'}})
@@ -344,7 +344,7 @@ end
 
 exports['test_custom_plugin_file_doesnt_exist'] = function(test, asserts)
   constants.DEFAULT_CUSTOM_PLUGINS_PATH = path.join(process.cwd(),
-                      '/agents/monitoring/tests/fixtures/custom_plugins')
+                      '/tests/fixtures/custom_plugins')
 
   local check = PluginCheck:new({id='foo', period=30,
                                  details={file='doesnt_exist.sh'}})
@@ -359,7 +359,7 @@ end
 
 exports['test_custom_plugin_cmd_arguments'] = function(test, asserts)
   constants.DEFAULT_CUSTOM_PLUGINS_PATH = path.join(process.cwd(),
-                      '/agents/monitoring/tests/fixtures/custom_plugins')
+                      '/tests/fixtures/custom_plugins')
 
   local check = PluginCheck:new({id='foo', period=30,
                                  details={file='plugin_custom_arguments.sh',
@@ -382,7 +382,7 @@ end
 
 exports['test_custom_plugin_all_types'] = function(test, asserts)
   constants.DEFAULT_CUSTOM_PLUGINS_PATH = path.join(process.cwd(),
-                      '/agents/monitoring/tests/fixtures/custom_plugins')
+                      '/tests/fixtures/custom_plugins')
 
   local check = PluginCheck:new({id='foo', period=30,
                                 details={file='plugin_1.sh'}})
@@ -406,7 +406,7 @@ end
 exports['test_custom_plugin_all_types_reschedueling'] = function(test, asserts)
   -- Verify that custom plugin checks correctly re-schedule itself
   constants.DEFAULT_CUSTOM_PLUGINS_PATH = path.join(process.cwd(),
-                      '/agents/monitoring/tests/fixtures/custom_plugins')
+                      '/tests/fixtures/custom_plugins')
 
   local check = PluginCheck:new({id='foo', period=2,
                                 details={file='plugin_1.sh'}})
@@ -428,7 +428,7 @@ end
 
 exports['test_custom_plugin_dimensions'] = function(test, asserts)
   constants.DEFAULT_CUSTOM_PLUGINS_PATH = path.join(process.cwd(),
-                      '/agents/monitoring/tests/fixtures/custom_plugins')
+                      '/tests/fixtures/custom_plugins')
 
   local check = PluginCheck:new({id='foo', period=30,
                                  details={file='plugin_dimensions.sh'}})
@@ -450,7 +450,7 @@ end
 
 exports['test_custom_plugin_metric_line_with_units'] = function(test, asserts)
   constants.DEFAULT_CUSTOM_PLUGINS_PATH = path.join(process.cwd(),
-                      '/agents/monitoring/tests/fixtures/custom_plugins')
+                      '/tests/fixtures/custom_plugins')
 
   local check = PluginCheck:new({id='foo', period=30,
                                  details={file='plugin_units.sh'}})
@@ -471,7 +471,7 @@ end
 
 exports['test_custom_plugin_cloudkick_agent_plugin_backward_compatibility_1'] = function(test, asserts)
   constants.DEFAULT_CUSTOM_PLUGINS_PATH = path.join(process.cwd(),
-                      '/agents/monitoring/tests/fixtures/custom_plugins')
+                      '/tests/fixtures/custom_plugins')
 
   local check = PluginCheck:new({id='foo', period=30,
                                  details={file='cloudkick_agent_custom_plugin_1.sh'}})
@@ -492,7 +492,7 @@ end
 
 exports['test_custom_plugin_cloudkick_agent_plugin_backward_compatibility_2'] = function(test, asserts)
   constants.DEFAULT_CUSTOM_PLUGINS_PATH = path.join(process.cwd(),
-                      '/agents/monitoring/tests/fixtures/custom_plugins')
+                      '/tests/fixtures/custom_plugins')
 
   local check = PluginCheck:new({id='foo', period=30,
                                  details={file='cloudkick_agent_custom_plugin_2.sh'}})

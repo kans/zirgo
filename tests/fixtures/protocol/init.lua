@@ -25,7 +25,7 @@ local load_fixtures = function(dir)
   return fixtures
 end
 
-local base = path.join('agents', 'monitoring', 'tests', 'fixtures', 'protocol')
+local base = path.join('tests', 'fixtures', 'protocol')
 
 fixtures = load_fixtures(base)
 fixtures['invalid-version'] = load_fixtures(path.join(base, 'invalid-version'))
