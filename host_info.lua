@@ -24,7 +24,7 @@ local table = require('table')
 local vtime = require('virgo-time')
 
 local sigarCtx = require('./sigar').ctx
-local sigarutil = require('monitoring/default/util/sigar')
+local sigarutil = require('./util/sigar')
 
 --[[ HostInfo ]]--
 local HostInfo = Object:extend()

@@ -19,9 +19,9 @@ local path = require('path')
 local os = require('os')
 local env = require('env')
 
-local Check = require('monitoring/default/check')
-local Metric = require('monitoring/default/check/base').Metric
-local constants = require('monitoring/default/util/constants')
+local Check = require('/check')
+local Metric = require('/check/base').Metric
+local constants = require('/util/constants')
 local BaseCheck = Check.BaseCheck
 local CheckResult = Check.CheckResult
 

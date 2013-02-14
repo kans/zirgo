@@ -1,6 +1,6 @@
 local spawn = require('childprocess').spawn
 local constants = require('constants')
-local misc = require('monitoring/default/util/misc')
+local misc = require('./util/misc')
 
 function runner(name)
   return spawn('python', {'tests/runner.py', name})

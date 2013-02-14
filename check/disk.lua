@@ -19,7 +19,7 @@ local BaseCheck = require('./base').BaseCheck
 local CheckResult = require('./base').CheckResult
 local table = require('table')
 
-local sigarutil = require('monitoring/default/util/sigar')
+local sigarutil = require('./util/sigar')
 
 local DiskCheck = BaseCheck:extend()
 

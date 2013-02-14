@@ -1,10 +1,10 @@
 local async = require('async')
 local fs = require('fs')
-local testUtil = require('monitoring/default/util/test')
+local testUtil = require('/util/test')
 local path = require('path')
 local fmt = require('string').format
 
-local ApacheCheck = require('monitoring/default/check').ApacheCheck
+local ApacheCheck = require('/check').ApacheCheck
 
 local PORT = 32321
 local HOST = '127.0.0.1'
