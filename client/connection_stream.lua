@@ -21,6 +21,7 @@ local fmt = require('string').format
 
 local async = require('async')
 local dns = require('dns')
+local versions = require('./versions')
 
 local ConnectionMessages = require('./connection_messages').ConnectionMessages
 local UpgradePollEmitter = require('./upgrade').UpgradePollEmitter
@@ -30,10 +31,9 @@ local AgentClient = require('./client').AgentClient
 local logging = require('logging')
 local consts = require('../util/constants')
 local misc = require('../util/misc')
-local vtime = require('virgo-time')
+local vutils = require('virgo_utils')
 local path = require('path')
 local utils = require('utils')
-local version = require('../util/version')
 local request = require('../protocol/request')
 
 local ConnectionStream = Emitter:extend()
@@ -68,8 +68,8 @@ end
 
 function ConnectionStream:_onUpgrade()
   local client = self:getClient()
-  local bundleVersion = version.bundle
-  local processVersion = version.process
+  local bundleVersion = versions.bundle
+  local processVersion = versions.versions
   local uri_path, options
 
   if not self._upgradeEnabled then
@@ -249,7 +249,7 @@ function ConnectionStream:reconnect(options)
   local datacenter = options.datacenter
   local delay = self:_setDelay(datacenter)
 
-  logging.infof('%s %s:%d -> Retrying connection in %dms', 
+  logging.infof('%s %s:%d -> Retrying connection in %dms',
                 datacenter, options.host, options.port, delay)
   self:emit('reconnect', options)
   timer.setTimeout(delay, function()
@@ -337,7 +337,7 @@ function ConnectionStream:_attachTimeSyncEvent(client)
     return
   end
   client:on('time_sync', function(timeObj)
-    vtime.timesync(timeObj.agent_send_timestamp, timeObj.server_receive_timestamp,
+    vutils.timesync(timeObj.agent_send_timestamp, timeObj.server_receive_timestamp,
                    timeObj.server_response_timestamp, timeObj.agent_recv_timestamp)
   end)
 end
