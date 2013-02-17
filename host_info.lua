@@ -18,13 +18,13 @@ local Object = require('core').Object
 local JSON = require('json')
 
 local fs = require('fs')
-local misc = require('./util/misc')
+local misc = require('/util/misc')
 local os = require('os')
 local table = require('table')
 local vutils = require('virgo_utils')
 
-local sigarCtx = require('./sigar').ctx
-local sigarutil = require('./util/sigar')
+local sigarCtx = require('/sigar').ctx
+local sigarutil = require('/util/sigar')
 
 --[[ HostInfo ]]--
 local HostInfo = Object:extend()

@@ -13,7 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 --]]
-
 local string = require('string')
 local utils = require('utils')
 local JSON = require('json')
@@ -24,22 +23,21 @@ local os = require('os')
 local path = require('path')
 local table = require('table')
 local Object = require('core').Object
-
 local fmt = require('string').format
 local Emitter = require('core').Emitter
-local async = require('async')
-local sigarCtx = require('./sigar').ctx
-local versions = require('versions')
 
-local constants = require('./util/constants')
-local misc = require('./util/misc')
-local fsutil = require('./util/fs')
-local UUID = require('./util/uuid')
-local logging = require('logging')
+local async = require('async')
+local sigarCtx = require('sigar').ctx
 local vutils = require('virgo_utils')
-local Endpoint = require('./endpoint').Endpoint
-local ConnectionStream = require('./client/connection_stream').ConnectionStream
-local CrashReporter = require('./crashreport').CrashReporter
+
+local constants = require('/util/constants')
+local misc = require('/util/misc')
+local fsutil = require('/util/fs')
+local UUID = require('/util/uuid')
+local logging = require('logging')
+local Endpoint = require('/endpoint').Endpoint
+local ConnectionStream = require('/client/connection_stream').ConnectionStream
+local CrashReporter = require('/crashreport').CrashReporter
 local MonitoringAgent = Emitter:extend()
 
 function MonitoringAgent:initialize(options)
@@ -68,7 +66,7 @@ function MonitoringAgent:start(options)
     function(callback)
       local dump_dir = virgo_paths.get(virgo_paths.VIRGO_PATH_PERSISTENT_DIR)
       local endpoints = self._config['monitoring_endpoints']
-      local reporter = CrashReporter:new(versions.versions, versions.bundle, virgo.platform, dump_dir, endpoints)
+      local reporter = CrashReporter:new(virgo.agent_config.version, virgo.bundle_version, virgo.platform, dump_dir, endpoints)
       reporter:submit(function(err, res)
         callback()
       end)

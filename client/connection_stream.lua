@@ -21,20 +21,19 @@ local fmt = require('string').format
 
 local async = require('async')
 local dns = require('dns')
-local versions = require('./versions')
 
 local ConnectionMessages = require('./connection_messages').ConnectionMessages
 local UpgradePollEmitter = require('./upgrade').UpgradePollEmitter
 
-local Scheduler = require('../schedule').Scheduler
+local Scheduler = require('/schedule').Scheduler
 local AgentClient = require('./client').AgentClient
 local logging = require('logging')
-local consts = require('../util/constants')
-local misc = require('../util/misc')
+local consts = require('/util/constants')
+local misc = require('/util/misc')
 local vutils = require('virgo_utils')
 local path = require('path')
 local utils = require('utils')
-local request = require('../protocol/request')
+local request = require('/protocol/request')
 
 local ConnectionStream = Emitter:extend()
 function ConnectionStream:initialize(id, token, guid, upgradeEnabled, options)
