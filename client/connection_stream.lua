@@ -67,8 +67,8 @@ end
 
 function ConnectionStream:_onUpgrade()
   local client = self:getClient()
-  local bundleVersion = versions.bundle
-  local processVersion = versions.versions
+  local bundleVersion = virgo.bundle_version
+  local processVersion = virgo.virgo_version
   local uri_path, options
 
   if not self._upgradeEnabled then

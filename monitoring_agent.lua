@@ -27,7 +27,7 @@ local fmt = require('string').format
 local Emitter = require('core').Emitter
 
 local async = require('async')
-local sigarCtx = require('sigar').ctx
+local sigarCtx = require('/sigar').ctx
 local vutils = require('virgo_utils')
 
 local constants = require('/util/constants')
@@ -66,7 +66,7 @@ function MonitoringAgent:start(options)
     function(callback)
       local dump_dir = virgo_paths.get(virgo_paths.VIRGO_PATH_PERSISTENT_DIR)
       local endpoints = self._config['monitoring_endpoints']
-      local reporter = CrashReporter:new(virgo.agent_config.version, virgo.bundle_version, virgo.platform, dump_dir, endpoints)
+      local reporter = CrashReporter:new(virgo.virgo_version, virgo.bundle_version, virgo.platform, dump_dir, endpoints)
       reporter:submit(function(err, res)
         callback()
       end)
@@ -184,8 +184,8 @@ function MonitoringAgent:_preConfig(callback)
       logging.infof('Starting agent %s (guid=%s, version=%s, bundle_version=%s)',
                       self._config['monitoring_id'],
                       self._config['monitoring_guid'],
-                      versions.versions,
-                      versions.bundle)
+                      virgo.virgo_version,
+                      virgo.bundle_version)
       callback()
     end
   }, callback)
