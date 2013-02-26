@@ -46,6 +46,9 @@ local argv = require("options")
 local Entry = {}
 
 function Entry.run()
+  if argv.args.e then
+    return require(e).run()
+  end
 
   if argv.args.d then
     logging.set_level(logging.EVERYTHING)

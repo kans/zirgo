@@ -8,24 +8,22 @@ import signal
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def test_cmd(additional=""):
+def _call(cmd, **kwargs):
+    sys.exit(subprocess.call(cmd, shell=True, **kwargs))
+
+
+def test_cmd(agent=""):
+    if not agent:
+        agent = os.path.join(ROOT, 'virgo', 'virgo')
     state_config = os.path.join(ROOT, 'contrib')
     monitoring_config = os.path.join(ROOT, 'fixtures', 'monitoring-agent-localhost.cfg')
     zip_file = "monitoring.zip"
-    cmd = '%s -n -z %s -c %s -s %s %s' % (paths.agent, zip_file, monitoring_config, state_config, additional)
-    print cmd
-    return cmd
+    return '%s -n -z %s -c %s -s %s %s' % (agent, zip_file, monitoring_config, state_config)
 
 
 def test_server_fixture(stdout=None):
     cmd = "luvit %s" % (os.path.join('tests', 'fixtures', 'protocol', 'server.lua'))
-    print cmd
-    rc = 0
-    if stdout is None:
-        rc = subprocess.call(cmd, shell=True)
-    else:
-        rc = subprocess.call(cmd, shell=True, stdout=stdout)
-    sys.exit(rc)
+    _call(cmd, stdout=stdout)
 
 
 def test_server_fixture_blocking(stdout=None):
@@ -42,10 +40,7 @@ def test_server_fixture_blocking(stdout=None):
 
 def test_endpoint(stdout=None):
     cmd = test_cmd()
-    print cmd
-    rc = 0
-    rc = subprocess.call(cmd, shell=True, stdout=stdout)
-    sys.exit(rc)
+    subprocess.call(cmd, shell=True, stdout=stdout)
 
 
 def test_endpoint_fixture(stdout=None):
@@ -76,5 +71,5 @@ if not ins in commands:
     sys.exit(1)
 
 print('Running %s' % ins)
-cmd = commands.get(ins)
+cmd = commands.get(ins, sys.argv[2:])
 cmd()

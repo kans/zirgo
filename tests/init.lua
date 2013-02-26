@@ -22,7 +22,7 @@ local path = require('path')
 local fs = require('fs')
 local table = require('table')
 
-local split = require('./util/misc').split
+local split = require('/util/misc').split
 
 local exports = {}
 
