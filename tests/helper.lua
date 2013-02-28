@@ -1,9 +1,34 @@
-local spawn = require('childprocess').spawn
-local constants = require('constants')
-local misc = require('./util/misc')
+#!/usr/bin/env luvit
 
-function runner(name)
-  return spawn('python', {'tests/runner.py', name})
+local spawn = require('childprocess').spawn
+local fs = require('fs')
+local path = require('path')
+
+local misc = require('/util/misc')
+local constants = require('constants')
+local vutils = require('virgo_utils')
+
+function start_agent()
+  local config_path = path.join(TEST_DIR, 'monitoring-agent-localhost.cfg')
+  local args = {
+    '-o', '-d', '-n',
+    '-s', TEST_DIR,
+    '-z', virgo.loaded_zip_path,
+    '-c', config_path
+  }
+
+  config = get_static('/static/tests/monitoring-agent-localhost.cfg')
+  fs.writeFileSync(config_path, config)
+
+  local agent = spawn(process.execPath, args)
+
+  agent.stderr:on('data', function(d)
+    process.stderr:write(d)
+  end)
+  agent.stdout:on('data', function(d)
+    process.stdout:write(d)
+  end)
+  return agent
 end
 
 local child
@@ -11,7 +36,8 @@ local child
 local function start_server(callback)
   local data = ''
   callback = misc.fireOnce(callback)
-  child = runner('server_fixture_blocking')
+  print('starting server')
+  child = spawn('luvit', {"tests/server.lua"})
   child.stderr:on('data', function(d)
     p(d)
     callback(d)
@@ -53,9 +79,15 @@ local function skip_all(exports, reason)
   return exports
 end
 
+if not virgo then
+  -- parse argv and stuff here
+  return
+end
+
 local exports = {}
 exports.runner = runner
 exports.start_server = start_server
 exports.stop_server = stop_server
 exports.skip_all = skip_all
+exports.start_agent = start_agent
 return exports

@@ -125,20 +125,8 @@ function MonitoringAgent:setConfig(config)
   self._config = config
 end
 
-function MonitoringAgent:getStreams()
-  return self._streams
-end
-
-function MonitoringAgent:getConfig()
-  return self._config
-end
-
-function MonitoringAgent:setConfig(config)
-  self._config = config
-end
-
 function MonitoringAgent:_preConfig(callback)
-
+  print('asdfasdfasfn\n\n')
   if self._config['monitoring_token'] == nil then
     logging.error("'monitoring_token' is missing from 'config'")
     process.exit(1)

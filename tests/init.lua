@@ -22,6 +22,8 @@ local path = require('path')
 local fs = require('fs')
 local table = require('table')
 
+local helper = require('./helper')
+local constants = require('constants')
 local split = require('/util/misc').split
 
 local exports = {}
@@ -43,7 +45,6 @@ end
 
 local TESTS_TO_RUN = {
   './crash-dump',
-  './collector',
   './tls',
   './agent-protocol',
   './crypto',
@@ -83,22 +84,28 @@ exports.run = function()
   -- bug that causes us to exit the loop early
   process.exitCode = 1
 
-  fs.mkdir(TEST_DIR, "0755", function()
-    async.forEachSeries(TESTS_TO_RUN, runit, function(err)
-      if err then
-        p(err)
-        debugm.traceback(err)
-        remove_tmp(function()
-          process.exit(1)
-        end)
-      end
-
-      process.exitCode = 0
-      remove_tmp(function()
-        process.exit(failed)
-      end)
-    end)
+  local agent = helper.start_agent()
+  require('timer').setTimeout(5000, function()
+    print(agent, server)
+    process.exit(0)
   end)
+  -- fs.mkdir(TEST_DIR, "0755", function()
+  --   async.forEachSeries(TESTS_TO_RUN, runit, function(err)
+  --     if err then
+  --       p(err)
+  --       agent:kill(constants.SIGUSR1)
+  --       debugm.traceback(err)
+  --       remove_tmp(function()
+  --         process.exit(1)
+  --       end)
+  --     end
+
+  --     process.exitCode = 0
+  --     remove_tmp(function()
+  --       process.exit(failed)
+  --     end)
+  --   end)
+  -- end)
 end
 
 return exports

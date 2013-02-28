@@ -46,37 +46,38 @@ local argv = require("options")
 local Entry = {}
 
 function Entry.run()
-  if argv.args.e then
-    return require(e).run()
-  end
-
   if argv.args.d then
     logging.set_level(logging.EVERYTHING)
   else
     logging.set_level(logging.INFO)
   end
 
-  if argv.crash then
+  if argv.args.crash then
     return virgo.force_crash()
   end
 
   local options = {}
 
-  if argv.s then
-    options.stateDirectory = argv.s
+  if argv.args.s then
+    options.stateDirectory = argv.args.s
   end
 
-  options.configFile = argv.c or constants.DEFAULT_CONFIG_PATH
+  options.configFile = argv.args.c or constants.DEFAULT_CONFIG_PATH
 
-  if argv.p then
+  if argv.args.p then
     options.pidFile = argv.p
   end
 
-  if argv.i then
+  if argv.args.i then
     options.tls = {
       rejectUnauthorized = true,
       ca = require('./certs').caCertsDebug
     }
+  end
+
+  if argv.args.e then
+    local mod = require(argv.args.e)
+    return mod.run()
   end
 
   local agent = MonitoringAgent:new(options)

@@ -23,7 +23,7 @@ local AgentProtocolConnection = require('/protocol/connection')
 local loggingUtil = require ('/util/logging')
 local instanceof = require('core').instanceof
 
-local fixtures = require('../fixtures/protocol')
+local fixtures = require('/tests/fixtures/protocol/init.lua')
 
 local exports = {}
 

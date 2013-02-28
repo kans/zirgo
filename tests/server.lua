@@ -1,7 +1,5 @@
-local net = require('net')
 local JSON = require('json')
-local fixtures = require('./')
-local LineEmitter = require('line-emitter').LineEmitter
+local LineEmitter = require('line-emitter')
 local table = require('table')
 local tls = require('tls')
 local timer = require('timer')
@@ -15,6 +13,9 @@ local fs = require('fs')
 local path = require('path')
 local fmt = require('string').format
 local os = require('os')
+
+local net = require('./net')
+local fixtures = require('./fixtures')
 
 local ports = {50041, 50051, 50061}
 
@@ -211,7 +212,7 @@ local json_responder = function(log, client, server)
     client:destroy()
   end)
 
-  local le = LineEmitter:new()
+  local le = LineEmitter.LineEmitter:new()
   client:pipe(le)
   le:on('data', bind_respond(log, client))
 
