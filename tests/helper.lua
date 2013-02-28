@@ -36,18 +36,28 @@ local child
 local function start_server(callback)
   local data = ''
   callback = misc.fireOnce(callback)
-  print('starting server')
-  child = spawn('luvit', {"tests/server.lua"})
+
+  print('starting mock AEP server ...')
+  local args = {
+    '-o', '-d', '-n',
+    '-s', TEST_DIR,
+    '-z', virgo.loaded_zip_path,
+    '-e', 'tests/server.lua'
+  }
+  child = spawn(process.execPath, args)
   child.stderr:on('data', function(d)
     p(d)
     callback(d)
   end)
-
+  local fired = false
   child.stdout:on('data', function(chunk)
-    p(chunk)
-    data = data .. chunk
-    if data:find('TLS fixture server listening on port 50061') then
-      callback()
+    print('[* AEP *]: ' .. chunk)
+    if not fired then
+      data = data .. chunk
+      if data:find('TLS fixture server listening on port 50061') then
+        callback()
+        fired = true
+      end
     end
   end)
   return child

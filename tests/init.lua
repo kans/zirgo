@@ -86,6 +86,7 @@ exports.run = function()
 
   fs.mkdir(TEST_DIR, "0755", function()
     local agent = helper.start_agent()
+
     async.forEachSeries(TESTS_TO_RUN, runit, function(err)
       if err then
         p(err)

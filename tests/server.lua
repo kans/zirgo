@@ -264,12 +264,16 @@ end
 process:on('error', function(err)
   print(err)
 end)
--- There is no cleanup code for the server here as the process for exiting is
--- to just ctrl+c the runner or kill the process.
-for k, port in pairs(ports) do
-  print("TLS fixture server listening on port " .. port)
-  server = tls.createServer({cert=certPem, key=keyPem}, function(client)
-    on_tls_creation(port, server, client)
-  end):listen(port, opts.listen_ip)
-end
 
+return {
+  run = function()
+    -- There is no cleanup code for the server here as the process for exiting is
+    -- to just ctrl+c the runner or kill the process.
+    for k, port in pairs(ports) do
+      print("TLS fixture server listening on port " .. port)
+      server = tls.createServer({cert=certPem, key=keyPem}, function(client)
+        on_tls_creation(port, server, client)
+      end):listen(port, opts.listen_ip)
+    end
+  end
+}
