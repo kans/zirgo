@@ -2,7 +2,7 @@ local path = require('path')
 local fs = require('fs')
 local string = require('string')
 local JSON = require('json')
-local vutils = require('virgo-utils')
+local vutils = require('virgo_utils')
 
 local statics = require('/lua_modules').statics
 
@@ -16,11 +16,10 @@ local load_fixtures = function(dir)
   local fixtures = {}
 
   for i,v in ipairs(statics) do
-    if path:dirname(v) == dir then
-      print(v)
+    if path.posix:dirname(v) == dir then
       local _, _, name = string.find(v, '(.*).json')
       if name ~= nil then
-        fixtures[name] = strip_newlines(vutils.get_static(path))
+        fixtures[name] = strip_newlines(get_static(v))
       end
     end
   end

@@ -84,28 +84,24 @@ exports.run = function()
   -- bug that causes us to exit the loop early
   process.exitCode = 1
 
-  local agent = helper.start_agent()
-  require('timer').setTimeout(5000, function()
-    print(agent, server)
-    process.exit(0)
-  end)
-  -- fs.mkdir(TEST_DIR, "0755", function()
-  --   async.forEachSeries(TESTS_TO_RUN, runit, function(err)
-  --     if err then
-  --       p(err)
-  --       agent:kill(constants.SIGUSR1)
-  --       debugm.traceback(err)
-  --       remove_tmp(function()
-  --         process.exit(1)
-  --       end)
-  --     end
+  fs.mkdir(TEST_DIR, "0755", function()
+    local agent = helper.start_agent()
+    async.forEachSeries(TESTS_TO_RUN, runit, function(err)
+      if err then
+        p(err)
+        agent:kill(constants.SIGUSR1)
+        debugm.traceback(err)
+        remove_tmp(function()
+          process.exit(1)
+        end)
+      end
 
-  --     process.exitCode = 0
-  --     remove_tmp(function()
-  --       process.exit(failed)
-  --     end)
-  --   end)
-  -- end)
+      process.exitCode = 0
+      remove_tmp(function()
+        process.exit(failed)
+      end)
+    end)
+  end)
 end
 
 return exports

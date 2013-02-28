@@ -17,7 +17,7 @@ function start_agent()
     '-c', config_path
   }
 
-  config = get_static('/static/tests/monitoring-agent-localhost.cfg')
+  local config = get_static('/static/tests/monitoring-agent-localhost.cfg')
   fs.writeFileSync(config_path, config)
 
   local agent = spawn(process.execPath, args)
