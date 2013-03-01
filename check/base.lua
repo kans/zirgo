@@ -464,15 +464,14 @@ end
 
 function SubProcCheck:run(callback)
   local args = {
-    '-n',
+    '-o',
     '-e',
-    'default/check_runner',
+    'check_runner',
     '--zip',
     virgo.loaded_zip_path,
     '-x',
     self:getType()
   }
-
   local cenv = self:_childEnv()
   local child = self:_runChild(process.execPath, args, cenv, callback)
 
@@ -500,8 +499,6 @@ function SubProcCheck:_findLibrary(mysqlexact, patterns, paths)
       break
     end
   end
-
-  -- TODO: path grepping with patterns and paths
 
   local mocker = env.get('VIRGO_SUBPROC_MOCK')
   if mocker ~= nil then

@@ -77,7 +77,7 @@ function Entry.run()
 
   if argv.args.e then
     local mod = require(argv.args.e)
-    return mod.run()
+    return mod.run(argv.args)
   end
 
   local agent = MonitoringAgent:new(options)
