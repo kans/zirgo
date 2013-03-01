@@ -352,8 +352,8 @@ exports['test_custom_plugin_file_not_executable'] = plugin_test('not_executable.
 exports['test_custom_plugin_non_zero_exit_code_with_status'] = plugin_test('non_zero_with_status.sh',
   'ponies > unicorns', 'unavailable')
 
-exports['test_custom_plugin_file_doesnt_exist'] = plugin_test('doesnt_exist.sh',
-  'Plugin exited with non-zero status code (code=127)', 'unavailable')
+-- exports['test_custom_plugin_file_doesnt_exist'] = plugin_test('doesnt_exist.sh',
+--   'Plugin exited with non-zero status code (code=127)', 'unavailable')
 
 exports['test_custom_plugin_cmd_arguments'] = plugin_test('plugin_custom_arguments.sh',
   'arguments test', 'available', {args = {'foo_bar', 'a', 'b', 'c'}, cb=function(test, asserts, metrics)
@@ -409,9 +409,10 @@ exports['test_custom_plugin_dimensions'] = plugin_test('plugin_dimensions.sh',
 
 exports['test_custom_plugin_metric_line_with_units'] = plugin_test('plugin_units.sh',
   'Total logged users: 66', 'available', {cb = function(test, asserts, metrics)
-    asserts.dequals(metrics['host1']['logged_users'], {t = 'int64', v = '66', u = 'users'})
-    asserts.dequals(metrics['host1']['data_out'], {t = 'int64', v = '1024', u = 'bytes'})
-    asserts.dequals(metrics['host1']['no_units'], {t = 'int64', v = '1'})
+    metrics = metrics['host1']
+    asserts.dequals(metrics['logged_users'], {t = 'int64', v = '66', u = 'users'})
+    asserts.dequals(metrics['data_out'], {t = 'int64', v = '1024', u = 'bytes'})
+    asserts.dequals(metrics['no_units'], {t = 'int64', v = '1'})
     test.done()
   end}
 )
@@ -419,18 +420,20 @@ exports['test_custom_plugin_metric_line_with_units'] = plugin_test('plugin_units
 exports['test_custom_plugin_cloudkick_agent_plugin_backward_compatibility_1'] = plugin_test(
   'cloudkick_agent_custom_plugin_1.sh', 'Service is not responding', 'available',
     {cb = function(test, asserts, metrics)
-    asserts.dequals(metrics['none']['legacy_state'], {t = 'string', v = 'err'})
-    asserts.dequals(metrics['none']['logged_users'], {t = 'int64', v = '7'})
-    asserts.dequals(metrics['none']['active_processes'], {t = 'int64', v = '200'})
+    metrics = metrics['none']
+    asserts.dequals(metrics['legacy_state'], {t = 'string', v = 'err'})
+    asserts.dequals(metrics['logged_users'], {t = 'int64', v = '7'})
+    asserts.dequals(metrics['active_processes'], {t = 'int64', v = '200'})
     test.done()
   end}
 )
 
 exports['test_custom_plugin_cloudkick_agent_plugin_backward_compatibility_2'] = plugin_test(
   'cloudkick_agent_custom_plugin_2.sh', '', 'available', {cb = function(test, asserts, metrics)
-    asserts.dequals(metrics['none']['legacy_state'], {t = 'string', v = 'warn'})
-    asserts.dequals(metrics['none']['logged_users'], {t = 'int64', v = '7'})
-    asserts.dequals(metrics['none']['active_processes'], {t = 'int64', v = '200'})
+    metrics = metrics['none']
+    asserts.dequals(metrics['legacy_state'], {t = 'string', v = 'warn'})
+    asserts.dequals(metrics['logged_users'], {t = 'int64', v = '7'})
+    asserts.dequals(metrics['active_processes'], {t = 'int64', v = '200'})
     test.done()
   end}
 )
@@ -465,6 +468,7 @@ end
 
 exports['test_custom_plugin_partial_output_sleep'] = plugin_test('partial_output_with_sleep.sh',
   'Everything is OK', 'available', {cb = function(test, asserts, metrics)
+    metrics = metrics['none']
     asserts.dequals(metrics['logged_users'], {t = 'int64', v = '7'})
     asserts.dequals(metrics['active_processes'], {t = 'int64', v = '200'})
     asserts.dequals(metrics['avg_wait_time'], {t = 'double', v = '100.7'})
@@ -475,7 +479,7 @@ exports['test_custom_plugin_partial_output_sleep'] = plugin_test('partial_output
 
 exports['test_custom_plugin_invalid_metric_line_invalid_metric_type'] = plugin_test(
   'invalid_metric_lines_1.sh', 'Invalid type "intfoo" for metric "metric1"', 'unavailable',
-    {cb = function(test, asserts, result, metrics)
+    {cb = function(test, asserts, metrics)
     asserts.dequals(metrics, {})
     test.done()
   end}
