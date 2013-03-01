@@ -4,7 +4,6 @@ local ConnectionStream = require('/client/connection_stream').ConnectionStream
 local misc = require('/util/misc')
 local helper = require('../helper')
 local timer = require('timer')
-local fixtures = require('../fixtures')
 local constants = require('constants')
 local consts = require('../../util/constants')
 local Endpoint = require('../../endpoint').Endpoint
@@ -41,7 +40,7 @@ exports['test_reconnects'] = function(test, asserts)
   end)
 
   local endpoints = {}
-  for _, address in pairs(fixtures.TESTING_AGENT_ENDPOINTS) do
+  for _, address in pairs(TESTING_AGENT_ENDPOINTS) do
     -- split ip:port
     table.insert(endpoints, Endpoint:new(address))
   end
@@ -53,7 +52,7 @@ exports['test_reconnects'] = function(test, asserts)
     function(callback)
       client:on('handshake_success', misc.nCallbacks(callback, 3))
       local endpoints = {}
-      for _, address in pairs(fixtures.TESTING_AGENT_ENDPOINTS) do
+      for _, address in pairs(TESTING_AGENT_ENDPOINTS) do
         -- split ip:port
         table.insert(endpoints, Endpoint:new(address))
       end
@@ -94,7 +93,7 @@ exports['test_upgrades'] = function(test, asserts)
   }
 
   local endpoints = {}
-  for _, address in pairs(fixtures.TESTING_AGENT_ENDPOINTS) do
+  for _, address in pairs(TESTING_AGENT_ENDPOINTS) do
     -- split ip:port
     table.insert(endpoints, Endpoint:new(address))
   end

@@ -30,7 +30,8 @@ local exports = {}
 
 local failed = 0
 
-_G['TEST_DIR'] = path.join(process.cwd(), 'tests', 'tmp')
+_G.TEST_DIR = path.join(process.cwd(), 'tests', 'tmp')
+_G.TESTING_AGENT_ENDPOINTS = {'127.0.0.1:50041', '127.0.0.1:50051', '127.0.0.1:50061'}
 
 local function remove_tmp(callback)
   fs.readdir(TEST_DIR, function(err, files)

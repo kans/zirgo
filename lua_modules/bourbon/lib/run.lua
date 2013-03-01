@@ -72,7 +72,7 @@ end
 
 
 local run_test = function(runner, stats, callback)
-  process.stdout:write(fmt("  Running %s", runner.name))
+  print(fmt("  Running %s", runner.name))
   local test_baton = TestBaton.new(runner, stats, function(err, skipped, skipReason)
     if skipped then
       if skipReason ~= nil then
