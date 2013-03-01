@@ -12,7 +12,7 @@ local path = require('path')
 local os = require('os')
 
 local exports = {}
-local child
+local AEP
 
 exports['test_reconnects'] = function(test, asserts)
 
@@ -48,7 +48,7 @@ exports['test_reconnects'] = function(test, asserts)
 
   async.series({
     function(callback)
-      child = helper.start_server(callback)
+      AEP = helper.start_server(callback)
     end,
     function(callback)
       client:on('handshake_success', misc.nCallbacks(callback, 3))
@@ -60,16 +60,16 @@ exports['test_reconnects'] = function(test, asserts)
       client:createConnections(endpoints, function() end)
     end,
     function(callback)
-      helper.stop_server(child)
+      AEP:kill(9)
       client:on('reconnect', misc.nCallbacks(callback, 3))
     end,
     function(callback)
-      child = helper.start_server(function()
+      AEP = helper.start_server(function()
         client:on('handshake_success', misc.nCallbacks(callback, 3))
       end)
     end,
   }, function()
-    helper.stop_server(child)
+    AEP:kill(9)
     asserts.ok(clientEnd > 0)
     asserts.ok(reconnect > 0)
     test.done()
@@ -101,7 +101,7 @@ exports['test_upgrades'] = function(test, asserts)
 
   async.series({
     function(callback)
-      child = helper.start_server(callback)
+      AEP = helper.start_server(callback)
     end,
     function(callback)
       client = ConnectionStream:new('id', 'token', 'guid', false, options)
@@ -113,7 +113,7 @@ exports['test_upgrades'] = function(test, asserts)
       client:getUpgrade():forceUpgradeCheck({test = true})
     end
   }, function()
-    helper.stop_server(child)
+    AEP:kill(9)
     client:done()
     test.done()
   end)

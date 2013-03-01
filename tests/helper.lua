@@ -8,10 +8,12 @@ local misc = require('/util/misc')
 local constants = require('constants')
 local vutils = require('virgo_utils')
 
+local agent
+
 function start_agent()
   local config_path = path.join(TEST_DIR, 'monitoring-agent-localhost.cfg')
   local args = {
-    '-o', '-d', '-n',
+    '-o', '-d',
     '-s', TEST_DIR,
     '-z', virgo.loaded_zip_path,
     '-c', config_path
@@ -37,21 +39,25 @@ local function start_server(callback)
   local data = ''
   callback = misc.fireOnce(callback)
 
+  local pprint = function(d)
+    print('[* AEP *]: ' .. d)
+  end
+
   print('starting mock AEP server ...')
   local args = {
-    '-o', '-d', '-n',
+    '-o', '-d',
     '-s', TEST_DIR,
     '-z', virgo.loaded_zip_path,
     '-e', 'tests/server.lua'
   }
   child = spawn(process.execPath, args)
   child.stderr:on('data', function(d)
-    p(d)
+    pprint('got stderr' .. d)
     callback(d)
   end)
   local fired = false
   child.stdout:on('data', function(chunk)
-    print('[* AEP *]: ' .. chunk)
+    pprint(chunk)
     if not fired then
       data = data .. chunk
       if data:find('TLS fixture server listening on port 50061') then
@@ -63,19 +69,24 @@ local function start_server(callback)
   return child
 end
 
-local function stop_server(child)
-  if not child then return end
+local function at_exit(child)
   pcall(function()
-    child:kill(constants.SIGUSR1) -- USR1
+    if not child then return end
+    child:kill(9)
+  end)
+
+  pcall(function()
+    if not agent then return end
+    agent:kill(9)
   end)
 end
 
 process:on('exit', function()
-  stop_server(child)
+  at_exit(child)
 end)
 
 process:on("error", function(e)
-  stop_server(child)
+  at_exit(child)
 end)
 
 -- This will skip all the functions in an export list but still be able to call them individually
@@ -97,7 +108,6 @@ end
 local exports = {}
 exports.runner = runner
 exports.start_server = start_server
-exports.stop_server = stop_server
 exports.skip_all = skip_all
 exports.start_agent = start_agent
 return exports

@@ -88,9 +88,9 @@ exports.run = function()
     local agent = helper.start_agent()
 
     async.forEachSeries(TESTS_TO_RUN, runit, function(err)
+      agent:kill(9)
       if err then
         p(err)
-        agent:kill(constants.SIGUSR1)
         debugm.traceback(err)
         remove_tmp(function()
           process.exit(1)
