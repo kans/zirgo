@@ -31,7 +31,7 @@ local MySQLCheck = Check.MySQLCheck
 local exports = {}
 
 local function setupTest(tcName)
-  env.set('VIRGO_SUBPROC_MOCK', 'monitoring/tests/check/mysql_mock', 1)
+  env.set('VIRGO_SUBPROC_MOCK', '/tests/check/mysql_mock', 1)
   env.set("VIRGO_SUBPROC_TESTCASE", tcName, 1)
 end
 

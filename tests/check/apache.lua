@@ -1,7 +1,5 @@
 local async = require('async')
-local fs = require('fs')
 local testUtil = require('/util/test')
-local path = require('path')
 local fmt = require('string').format
 
 local ApacheCheck = require('/check').ApacheCheck
@@ -19,9 +17,7 @@ exports['test_apache'] = function(test, asserts)
 
   function reqCallback(req, res)
     if not response then
-      local filePath = path.join(process.cwd(), 'agents', 'monitoring', 'tests',
-                                 'fixtures', 'checks', 'apache_server_status.txt')
-      response = fs.readFileSync(filePath)
+      response = get_static('/static/tests/checks/apache_server_status.txt')
     end
     res:writeHead(200, {
       ["Content-Type"] = "text/plain",

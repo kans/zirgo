@@ -44,16 +44,16 @@ local function remove_tmp(callback)
 end
 
 local TESTS_TO_RUN = {
-  './crash-dump',
-  './tls',
-  './agent-protocol',
-  './crypto',
-  './misc',
+  -- './crash-dump',
+  -- './tls',
+  -- './agent-protocol',
+  -- './crypto',
+  -- './misc',
   './check',
-  './fs',
-  './schedule',
-  './virgo',
-  './net'
+  -- './fs',
+  -- './schedule',
+  -- './virgo',
+  -- './net'
 }
 
 if process.env['TEST_FILES'] then
