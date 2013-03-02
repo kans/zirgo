@@ -352,8 +352,17 @@ exports['test_custom_plugin_file_not_executable'] = plugin_test('not_executable.
 exports['test_custom_plugin_non_zero_exit_code_with_status'] = plugin_test('non_zero_with_status.sh',
   'ponies > unicorns', 'unavailable')
 
--- exports['test_custom_plugin_file_doesnt_exist'] = plugin_test('doesnt_exist.sh',
---   'Plugin exited with non-zero status code (code=127)', 'unavailable')
+
+exports['test_custom_plugin_file_doesnt_exist'] = function(test, asserts)
+  local check = PluginCheck:new({id='foo', period=30, details={file='magical_ranibow_pony.sh'}})
+  asserts.ok(check._lastResult == nil)
+  check:run(function(result)
+    asserts.ok(result ~= nil)
+    asserts.equals(result:getStatus(), 'Plugin exited with non-zero status code (code=127)')
+    asserts.equals(result:getState(), 'unavailable')
+    test.done()
+  end)
+end
 
 exports['test_custom_plugin_cmd_arguments'] = plugin_test('plugin_custom_arguments.sh',
   'arguments test', 'available', {details = {args = {'foo_bar', 'a', 'b', 'c'}}, cb = function(test, asserts, metrics)
