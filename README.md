@@ -1,18 +1,13 @@
-Virgo
+Rackspace Monitoring Agent
 =====
 
-Virgo is a project for building an on-host agents. The goal is to
-provide shared infrastructure for various types of agents.
-
-The first agent to use this infrastructure is the Rackspace Cloud
-Monitoring agent.
-
-Join in and build your agent with us.
+The monitoring agent is the first agent to use the infrastructure provided by 
+[https://github.com/racker/virgo/](virgo)
 
 License
 =======
 
-virgo is distributed under the [Apache License 2.0][apache].
+The Monitoring Agent is distributed under the [Apache License 2.0][apache].
 
 [apache]: http://www.apache.org/licenses/LICENSE-2.0.html
 
@@ -20,11 +15,11 @@ virgo is distributed under the [Apache License 2.0][apache].
 Bundles
 =======
 
-Bundles take the form [name]-[version].zip, ie:
+The Lua files in this repository are not used directly.  Instead, they must first be bundled into a zip archive that virgo
+can understand.  Bundles take the form [name]-[version].zip, ie:
 
     monitoring-0.0.1.zip
 
-A command-line argument of '-b' will force a specific bundle directory.
 
 Versioning
 ==========
