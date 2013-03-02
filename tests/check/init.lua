@@ -83,7 +83,7 @@ local plugin_test = function(name, status, state, optional)
 
     dump_check(name, perms, function(err, res)
       asserts.ok(err == nil, err)
-      local check = PluginCheck:new({id=name, period=period, details=details, args=optional.args})
+      local check = PluginCheck:new({id=name, period=period, details=details})
       asserts.ok(check._lastResult == nil, check._lastResult)
       check:run(function(result)
         asserts.ok(result ~= nil)
@@ -347,7 +347,7 @@ exports['test_custom_plugin_timeout'] = plugin_test('timeout.py',
   'Plugin didn\'t finish in 0.5 seconds', 'unavailable', {details={timeout=500}})
 
 exports['test_custom_plugin_file_not_executable'] = plugin_test('not_executable.sh',
-  'Plugin exited with non-zero status code (code=127)', 'unavailable', {perms='0555'})
+  'Plugin exited with non-zero status code (code=127)', 'unavailable', {perms='0444'})
 
 exports['test_custom_plugin_non_zero_exit_code_with_status'] = plugin_test('non_zero_with_status.sh',
   'ponies > unicorns', 'unavailable')
@@ -356,7 +356,8 @@ exports['test_custom_plugin_non_zero_exit_code_with_status'] = plugin_test('non_
 --   'Plugin exited with non-zero status code (code=127)', 'unavailable')
 
 exports['test_custom_plugin_cmd_arguments'] = plugin_test('plugin_custom_arguments.sh',
-  'arguments test', 'available', {args = {'foo_bar', 'a', 'b', 'c'}, cb=function(test, asserts, metrics)
+  'arguments test', 'available', {details = {args = {'foo_bar', 'a', 'b', 'c'}}, cb = function(test, asserts, metrics)
+    metrics = metrics['none']
     asserts.dequals(metrics['foo_bar'], {t = 'string', v = '0'})
     asserts.dequals(metrics['a'], {t = 'string', v = '1'})
     asserts.dequals(metrics['b'], {t ='string', v = '2'})
@@ -367,6 +368,7 @@ exports['test_custom_plugin_cmd_arguments'] = plugin_test('plugin_custom_argumen
 
 exports['test_custom_plugin_all_types'] = plugin_test('plugin_1.sh',
   'Everything is OK', 'available', {cb = function(test, asserts, metrics)
+    metrics = metrics['none']
     asserts.dequals(metrics['logged_users'], {t = 'int64', v = '7'})
     asserts.dequals(metrics['active_processes'], {t = 'int64', v = '200'})
     asserts.dequals(metrics['avg_wait_time'], {t = 'double', v = '100.7'})

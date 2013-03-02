@@ -83,26 +83,28 @@ exports.run = function()
   -- set the exitCode to error in case we trigger some
   -- bug that causes us to exit the loop early
   process.exitCode = 1
+  remove_tmp(function()
+    fs.mkdir(TEST_DIR, "0755", function()
+      local agent = helper.start_agent()
 
-  fs.mkdir(TEST_DIR, "0755", function()
-    local agent = helper.start_agent()
+      async.forEachSeries(TESTS_TO_RUN, runit, function(err)
+        agent:kill(9)
+        if err then
+          p(err)
+          debugm.traceback(err)
+          remove_tmp(function()
+            process.exit(1)
+          end)
+        end
 
-    async.forEachSeries(TESTS_TO_RUN, runit, function(err)
-      agent:kill(9)
-      if err then
-        p(err)
-        debugm.traceback(err)
+        process.exitCode = 0
         remove_tmp(function()
-          process.exit(1)
+          process.exit(failed)
         end)
-      end
-
-      process.exitCode = 0
-      remove_tmp(function()
-        process.exit(failed)
       end)
     end)
   end)
+
 end
 
 return exports
