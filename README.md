@@ -2,7 +2,7 @@ Rackspace Monitoring Agent
 =====
 
 The monitoring agent is the first agent to use the infrastructure provided by
-[https://github.com/racker/virgo](virgo)
+[virgo](https://github.com/racker/virgo)
 
 License
 =======
