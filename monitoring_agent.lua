@@ -87,7 +87,7 @@ end
 
 function MonitoringAgent:connect(callback)
   local endpoints = self._config['monitoring_endpoints']
-  local upgradesEnabled = self._config['monitoring_upgrade'] or false
+  local upgradesEnabled = self._config['monitoring_upgrade'] or true
 
   if #endpoints <= 0 then
     logging.error('no endpoints')
@@ -110,7 +110,47 @@ function MonitoringAgent:connect(callback)
   self._streams:on('promote', function()
     self:emit('promote')
   end)
+  self._streams:on('shutdown', utils.bind(MonitoringAgent._onShutdown, self))
   self._streams:createConnections(endpoints, callback)
+end
+
+function MonitoringAgent:_shutdown(msg, timeout, exit_code, shutdownType)
+  if shutdownType == constants.SHUTDOWN_RESTART then
+    virgo.perform_restart_on_upgrade()
+  else
+    -- Sleep to keep from busy restarting on upstart/systemd/etc
+    timer.setTimeout(timeout, function()
+      if msg then
+        logging.info(msg)
+      end
+      process.exit(exit_code)
+    end)
+  end
+end
+
+function MonitoringAgent:_onShutdown(shutdownType)
+  local sleep = 0
+  local timeout = 0
+  local exit_code = 0
+  local msg
+
+  -- Destroy Socket Streams
+  self._streams:shutdown()
+
+  if shutdownType == constants.SHUTDOWN_UPGRADE then
+    msg = 'Shutting down agent due to upgrade'
+  elseif shutdownType == constants.SHUTDOWN_RATE_LIMIT then
+    msg = 'Shutting down. The rate limit was exceeded for the ' ..
+    'agent API endpoint. Contact support if you need an increased rate limit.'
+    exit_code = constants.RATE_LIMIT_RETURN_CODE
+    timeout = constants.RATE_LIMIT_SLEEP
+  elseif shutdownType == constants.SHUTDOWN_RESTART then
+    msg = 'Attempting to restart agent'
+  else
+    msg = fmt('Shutdown called for unknown type %s', shutdownType)
+  end
+
+  self:_shutdown(msg, timeout, exit_code, shutdownType)
 end
 
 function MonitoringAgent:getStreams()

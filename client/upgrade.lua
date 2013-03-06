@@ -23,7 +23,9 @@ local UpgradePollEmitter = Emitter:extend()
 
 function UpgradePollEmitter:initialize()
   self.stopped = nil
-  self.options = nil
+  self._options = {}
+  self._options.exit_on_upgrade = virgo.exit_on_upgrade == 'true'
+  self._options.restart_on_upgrade = virgo.restart_on_upgrade == 'true'
 end
 
 function UpgradePollEmitter:calcTimeout()
@@ -37,7 +39,7 @@ function UpgradePollEmitter:_emit()
 end
 
 function UpgradePollEmitter:forceUpgradeCheck(options)
-  self.options = misc.merge(self.options or {}, options)
+  self._options = misc.merge(self._options, options)
   self:_emit()
 end
 
@@ -74,6 +76,16 @@ function UpgradePollEmitter:stop()
     timer.clearTimer(self._timer)
   end
   self.stopped = true
+end
+
+function UpgradePollEmitter:onSuccess()
+  local reason
+  if self._options.exit_on_upgrade then
+    reason = consts.SHUTDOWN_UPGRADE
+  elseif self._options.restart_on_upgrade then
+    reason = consts.SHUTDOWN_RESTART
+  end
+  self:emit('shutdown', reason)
 end
 
 local exports = {}
