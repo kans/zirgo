@@ -5,7 +5,8 @@
     'DOCUMENTATION_LINK': 'http://www.rackspace.com/cloud/public/monitoring/',
     'REPO': 'https://github.com/racker/virgo.git',
     'LICENSE': 'Apache-2.0',
-    'MAINTAINER': 'Rackspace Cloud Monitoring <monitoring@rackspace.com>',
+    'EMAIL': 'monitoring@rackspace.com',
+    'MAINTAINER': 'Rackspace Cloud Monitoring <<(EMAIL)>',
     'LONG_DESCRIPTION': 'rackspace-monitoring-agent is a daemon that is installed on a host to gather statistics and run checks and report data back to the cloud monitoring service. See: <(DOCUMENTATION_LINK)',
     'CHANGELOG': [
       '0.1.7',
