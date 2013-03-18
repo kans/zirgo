@@ -65,11 +65,4 @@
         'add swapinfo to memory checks',
     ],
   },
-  'targets': [
-  {
-    'target_name': 'stub',
-    'type': 'none'
-    }
-  ],
-  'make_global_settings': []
 }
