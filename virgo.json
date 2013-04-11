@@ -9,6 +9,7 @@
   "EMAIL": "monitoring@rackspace.com",
   "MAINTAINER": "Rackspace Cloud Monitoring <monitoring@rackspace.com>",
   "LONG_DESCRIPTION": "rackspace-monitoring-agent is a daemon that is installed on a host to gather statistics and run checks and report data back to the cloud monitoring service. See: <(DOCUMENTATION_LINK)",
+  "WIN_PRODUCT_DESCRIPTION": "Rackspace Monitoring Agent is the component that runs on the monitored server.",
   "CHANGELOG": [
     {
       "version": "0.1.7",
