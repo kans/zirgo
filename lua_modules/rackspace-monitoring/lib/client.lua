@@ -61,7 +61,7 @@ function ClientBase:initialize(host, port, version, options)
   self.headers = {}
   self.options = misc.merge({}, options)
 
-  self.headers['User-Agent'] = 'agent/virgo'
+  self.headers['User-Agent'] = options.user_agent or 'agent/luvit-keystone-client'
   self.headers['Accept'] = 'application/json'
   self.headers['Content-Type'] = 'application/json'
 end
@@ -318,9 +318,7 @@ function Client:requestPaginated(path, callback)
         return
       end
 
-      if data.metadata.next_marker ~= nil then
-        startMarker = data.metadata.next_marker
-      end
+      startMarker = data.metadata.next_marker
 
       for k, v in pairs(data.values) do
         table.insert(results, v)

@@ -89,7 +89,6 @@ function ConnectionStream:_onUpgrade()
     tls = client._tls_options
   }
 
-  self._channel = 'master'
   uri_path = fmt('/upgrades/%s/VERSION', self._channel)
   options = misc.merge({ path = uri_path, }, options)
   request.makeRequest(options, function(err, result, version)

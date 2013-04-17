@@ -53,6 +53,7 @@ local TESTS_TO_RUN = {
   './check',
   './fs',
   './schedule',
+  './upgrade',
   './net'
 }
 

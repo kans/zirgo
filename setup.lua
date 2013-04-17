@@ -22,6 +22,7 @@ local fs = require('fs')
 local timer = require('timer')
 local JSON = require('json')
 local table = require('table')
+local version = require('./util/version')
 
 local async = require('async')
 local ask = require('/util/prompt').ask
@@ -96,7 +97,11 @@ function Setup:_out(msg)
 end
 
 function Setup:_getOsStartString()
-  return 'service rackspace-monitoring-agent start'
+  if os.type() == "win32" then
+    return 'This agent is controlled by the Windows Service Manager.'
+  else
+    return 'service rackspace-monitoring-agent start'
+  end
 end
 
 function Setup:_isLocalEntity(entity)
@@ -196,7 +201,9 @@ function Setup:run(callback)
     end,
     -- fetch all tokens
     function(username, token, callback)
-      client = maas.Client:new(username, token)
+      local options = {}
+      options.user_agent = fmt('rackspace-monitoring-agent/%s:%s; %s', version.process, version.bundle, username)
+      client = maas.Client:new(username, token, options)
       client.agent_tokens.get(callback)
     end,
     -- is there a token for the host
@@ -350,15 +357,23 @@ function Setup:run(callback)
 
               local validatedIndex = tonumber(index)
               if validatedIndex == #localEntities + 1 then
-                client.entities.create(self:_buildLocalEntity(hostname), function(err, entity)
+                ask('Creating an entity does not work with the Rackspace Cloud Control Panel. Really create an entity? (yes/no)', function(err, resp)
                   if err then
-                    callback(err)
-                    return
+                    return callback(err)
                   end
-                  self:_out('')
-                  self:_out(fmt('New Entity Created: %s', entity))
-                  callback(nil, entity)
-                end)
+                  if resp:lower() ~= 'y' and resp:lower() ~= 'yes' then
+                    return entitySelection()
+                  end
+                  client.entities.create(self:_buildLocalEntity(hostname), function(err, entity)
+                    if err then
+                      callback(err)
+                      return
+                    end
+                    self:_out('')
+                    self:_out(fmt('New Entity Created: %s', entity))
+                    callback(nil, entity)
+                  end)
+                end);
               elseif validatedIndex == #localEntities + 2 then
                 callback()
               elseif validatedIndex >= 1 and validatedIndex <= #localEntities then

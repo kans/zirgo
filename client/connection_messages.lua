@@ -8,7 +8,7 @@ local loggingUtil = require ('../util/logging')
 local path = require('path')
 local util = require('../util/misc')
 local consts = require('../util/constants')
-local certs = require('../certs')
+local code_cert = require('../code_cert')
 local table = require('table')
 local os = require('os')
 local https = require('https')
@@ -154,7 +154,7 @@ function ConnectionMessages:getUpgrade(version, client, callback)
         return callback(err)
       end
 
-      self:verify(filename, filename_sig, certs.codeCert, function(err)
+      self:verify(filename, filename_sig, code_cert.codeCert, function(err)
         if err then
           return callback(err)
         end
@@ -220,10 +220,11 @@ function ConnectionMessages:getUpgrade(version, client, callback)
   }, function(err)
     if err then
       client:log(logging.ERROR, fmt('Error downloading update: %s', tostring(err)))
-      return
+      return callback(err)
     end
     local msg = 'An update to the Rackspace Cloud Monitoring Agent has been downloaded'
     client:log(logging.INFO, msg)
+    return callback()
   end)
 end
 
@@ -251,10 +252,20 @@ function ConnectionMessages:onMessage(client, msg)
       return
     end
 
-    if method == 'binary_upgrade.available' then
-      return self:getUpgrade('binary', client)
+     if method == 'binary_upgrade.available' then
+      return self:getUpgrade('binary', client, function(err)
+        if err then
+          client:log(logging.INFO, fmt('error handling %s %s', method, err))
+          return
+        end
+      end)
     elseif method == 'bundle_upgrade.available' then
-      return self:getUpgrade('bundle', client)
+      return self:getUpgrade('bundle', client, function(err)
+        if err then
+          client:log(logging.INFO, fmt('error handling %s %s', method, err))
+          return
+        end
+      end)
     end
 
     client:log(logging.DEBUG, fmt('No handler for method: %s', method))

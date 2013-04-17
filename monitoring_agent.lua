@@ -110,7 +110,7 @@ function MonitoringAgent:connect(callback)
   self._streams:on('promote', function()
     self:emit('promote')
   end)
-  self._streams:on('shutdown', utils.bind(MonitoringAgent._onShutdown, self))
+
   self._streams:createConnections(endpoints, callback)
 end
 

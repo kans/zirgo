@@ -40,10 +40,14 @@ local LoadAverageCheck = Check.LoadAverageCheck
 local MySQLTests = require('./mysql')
 local ApacheTests = require('./apache')
 local FileSystemTests = require('./filesystem')
+local LoadTests = require('./load_average')
+local RedisTests = require('./redis')
 
 local exports = merge(MySQLTests, {})
 exports = merge(exports, ApacheTests)
 exports = merge(exports, FileSystemTests)
+exports = merge(exports, LoadTests)
+exports = merge(exports, RedisTests)
 
 constants.DEFAULT_CUSTOM_PLUGINS_PATH = TEST_DIR
 
@@ -261,33 +265,6 @@ exports['test_disk_check_target_does_not_exist'] = function(test, asserts)
     asserts.equal(result:getState(), 'unavailable')
     asserts.equal(result:getStatus(), 'No such disk: does-not-exist')
     test.done()
-  end)
-end
-
-exports['test_load_average_check'] = function(test, asserts)
-  local check = LoadAverageCheck:new({id='foo', period=30})
-  asserts.ok(check._lastResult == nil)
-  check:run(function(result)
-    if os.type() == "win32" then
-      -- Check isn't portable to win32, but make sure it still reports unavailable correctly.
-      asserts.ok(result ~= nil)
-      asserts.ok(check._lastResult ~= nil)
-      asserts.equal(result['_state'], "unavailable")
-      test.done()
-    else
-      asserts.ok(result ~= nil)
-      asserts.equal(result['_state'], "available")
-      local m = result:getMetrics()['none']
-      asserts.not_nil(m)
-      asserts.not_nil(m['1m'])
-      asserts.not_nil(m['5m'])
-      asserts.not_nil(m['15m'])
-      asserts.is_number(tonumber(m['5m']['v']))
-      asserts.equal(m['5m']['t'], 'double')
-      asserts.ok(check._lastResult ~= nil)
-      asserts.ok(#check._lastResult:serialize() > 0)
-      test.done()
-    end
   end)
 end
 
