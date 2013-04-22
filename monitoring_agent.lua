@@ -28,7 +28,6 @@ local Emitter = require('core').Emitter
 
 local async = require('async')
 local sigarCtx = require('/sigar').ctx
-local vutils = require('virgo_utils')
 
 local constants = require('/util/constants')
 local misc = require('/util/misc')

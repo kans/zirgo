@@ -1,27 +1,34 @@
 local bind = require('utils').bind
 local timer = require('timer')
 local Emitter = require('core').Emitter
-local Object = require('core').Object
-local misc = require('../util/misc')
-local logging = require('logging')
-local loggingUtil = require ('../util/logging')
 local path = require('path')
-local util = require('../util/misc')
-local consts = require('../util/constants')
-local code_cert = require('../code_cert')
+local Object = require('core').Object
 local table = require('table')
 local os = require('os')
 local https = require('https')
 local fs = require('fs')
+local crypto = require('_crypto')
+local instanceof = require('core').instanceof
+local string = require('string')
+local sigar = require('sigar')
+
+local misc = require('../util/misc')
+local logging = require('logging')
+local loggingUtil = require ('../util/logging')
+local consts = require('../util/constants')
 local async = require('async')
 local fmt = require('string').format
 local fsutil = require('../util/fs')
-local crypto = require('_crypto')
 local errors = require('../errors')
-local instanceof = require('core').instanceof
 local request = require('../protocol/request')
-local sigar = require('sigar')
-local string = require('string')
+
+local code_cert
+if _G.TESTING_CERTS then
+  code_cert = _G.TESTING_CERTS
+else
+  code_cert = require('../code_cert.prod.lua')
+end
+
 
 -- Connection Messages
 local ConnectionMessages = Emitter:extend()
