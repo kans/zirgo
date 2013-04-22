@@ -13,8 +13,10 @@ limitations under the License.
 local fs = require('fs')
 local path = require('path')
 local async = require('async')
-local RedisCheck = require('monitoring/default/check').RedisCheck
-local testUtil = require('monitoring/default/util/test')
+
+local RedisCheck = require('/check').RedisCheck
+local testUtil = require('/util/test')
+
 local exports = {}
 exports['test_redis_2.4_success_result_parsing'] = function(test, asserts)
   local check = RedisCheck:new({id='foo', period=30, details={host='127.0.0.1', port=8585}})
