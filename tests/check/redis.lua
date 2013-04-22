@@ -16,14 +16,15 @@ local async = require('async')
 
 local RedisCheck = require('/check').RedisCheck
 local testUtil = require('/util/test')
+local fixtures = require('/tests/fixtures').checks
 
 local exports = {}
+
 exports['test_redis_2.4_success_result_parsing'] = function(test, asserts)
   local check = RedisCheck:new({id='foo', period=30, details={host='127.0.0.1', port=8585}})
-  local filePath = path.join(process.cwd(), 'agents','monitoring','tests','fixtures','checks','redis_2.4_response.txt')
   local commandMap = {}
   local server = nil
-  commandMap['INFO\r'] = fs.readFileSync(filePath)
+  commandMap['INFO\r'] = fixtures["redis_2.4_response.txt"]
   async.series({
     function(callback)
       testUtil.runTestTCPServer(8585, '127.0.0.1', commandMap, function(err, _server)
@@ -55,10 +56,9 @@ exports['test_redis_2.4_success_result_parsing'] = function(test, asserts)
 end
 exports['test_redis_2.6_success_result_parsing'] = function(test, asserts)
   local check = RedisCheck:new({id='foo', period=30, details={host='127.0.0.1', port=8586}})
-  local filePath = path.join(process.cwd(), 'agents','monitoring','tests','fixtures','checks','redis_2.6_response.txt')
   local commandMap = {}
   local server = nil
-  commandMap['INFO\r'] = fs.readFileSync(filePath)
+  commandMap['INFO\r'] = fixtures["redis_2.6_response.txt"]
   async.series({
     function(callback)
       testUtil.runTestTCPServer(8586, '127.0.0.1', commandMap, function(err, _server)
@@ -90,11 +90,10 @@ exports['test_redis_2.6_success_result_parsing'] = function(test, asserts)
 end
 exports['test_redis_2.4_success_with_auth'] = function(test, asserts)
   local check = RedisCheck:new({id='foo', period=30, details={host='127.0.0.1', port=8585, password='valid'}})
-  local filePath = path.join(process.cwd(), 'agents','monitoring','tests','fixtures','checks','redis_2.4_response.txt')
   local commandMap = {}
   local server = nil
   commandMap['AUTH valid\r'] = '+OK'
-  commandMap['INFO\r'] = fs.readFileSync(filePath)
+  commandMap['INFO\r'] = fixtures["redis_2.4_response.txt"]
   async.series({
     function(callback)
       testUtil.runTestTCPServer(8585, '127.0.0.1', commandMap, function(err, _server)
@@ -134,10 +133,9 @@ exports['test_redis_error_connection'] = function(test, asserts)
 end
 exports['test_redis_error_missing_password'] = function(test, asserts)
   local check = RedisCheck:new({id='foo', period=30, details={host='127.0.0.1', port=8586}})
-  local filePath = path.join(process.cwd(), 'agents','monitoring','tests','fixtures','checks','redis_operation_not_permitted.txt')
   local commandMap = {}
   local server = nil
-  commandMap['INFO\r'] = fs.readFileSync(filePath)
+  commandMap['INFO\r'] = fixtures["redis_operation_not_permitted.txt"]
   async.series({
     function(callback)
       testUtil.runTestTCPServer(8586, '127.0.0.1', commandMap, function(err, _server)
@@ -164,10 +162,9 @@ exports['test_redis_error_missing_password'] = function(test, asserts)
 end
 exports['test_redis_error_invalid_password'] = function(test, asserts)
   local check = RedisCheck:new({id='foo', period=30, details={host='127.0.0.1', port=8586, password='invalid'}})
-  local filePath = path.join(process.cwd(), 'agents','monitoring','tests','fixtures','checks','redis_invalid_password.txt')
   local commandMap = {}
   local server = nil
-  commandMap['AUTH invalid\r'] = fs.readFileSync(filePath)
+  commandMap['AUTH invalid\r'] = fixtures["redis_invalid_password.txt"]
   async.series({
     function(callback)
       testUtil.runTestTCPServer(8586, '127.0.0.1', commandMap, function(err, _server)

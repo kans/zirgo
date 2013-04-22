@@ -34,7 +34,6 @@ exports['invalid-version'] = load_fixtures(path.join(base, 'invalid-version'), t
 exports['invalid-process-version'] = load_fixtures(path.join(base, 'invalid-process-version'), true)
 exports['invalid-bundle-version'] = load_fixtures(path.join(base, 'invalid-bundle-version'), true)
 exports['rate-limiting'] = load_fixtures(path.join(base, 'rate-limiting'), true)
-
 exports['custom_plugins'] = load_fixtures(path.join('static','tests', 'custom_plugins'))
-p(exports['custom_plugins']['partial_output_with_sleep.sh'])
+exports['checks'] = load_fixtures(path.join('static','tests', 'checks'))
 return exports
