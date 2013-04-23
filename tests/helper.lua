@@ -13,7 +13,7 @@ local agent
 function start_agent()
   local config_path = path.join(TEST_DIR, 'monitoring-agent-localhost.cfg')
   local args = {
-    '-o', '-d',
+    '-o',
     '-s', TEST_DIR,
     '-z', virgo.loaded_zip_path,
     '-c', config_path
@@ -45,7 +45,7 @@ local function start_server(callback)
 
   print('starting mock AEP server ...')
   local args = {
-    '-o', '-d',
+    '-o',
     '-s', TEST_DIR,
     '-z', virgo.loaded_zip_path,
     '-e', 'tests/server.lua'

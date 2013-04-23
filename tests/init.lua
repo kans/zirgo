@@ -87,10 +87,10 @@ exports.run = function()
   process.exitCode = 1
   remove_tmp(function()
     fs.mkdir(TEST_DIR, "0755", function()
-      local agent = helper.start_agent()
+      -- local agent = helper.start_agent()
 
       async.forEachSeries(TESTS_TO_RUN, runit, function(err)
-        agent:kill(9)
+        -- agent:kill(9)
         if err then
           p(err)
           debugm.traceback(err)
