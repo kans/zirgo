@@ -54,7 +54,7 @@ function INT2HEX(x)
     x = math.floor(x/base)
     s = string.sub(HEXES, d, d)..s
   end
-  if #s == 1 then s = "0" .. s end
+  while #s < 2 do s = "0" .. s end
   return s
 end
 function HEX2INT(s)
